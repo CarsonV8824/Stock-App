@@ -1,11 +1,12 @@
 from ttkthemes import ThemedTk
 from tkinter import ttk
+import tkinter as tk
 
 def rgb(r, g, b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
 def main():
-    root = ThemedTk(theme="Adapta")
+    root = ThemedTk(theme="breeze")
     root.config(bg=rgb(200,200,200))
     button = ttk.Button(root, text="modern button")
     entry = ttk.Entry(root)
