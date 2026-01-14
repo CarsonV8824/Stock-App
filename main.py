@@ -14,5 +14,21 @@ def main():
     button.pack()
     root.mainloop()
 
+with open("quiz.txt", "r") as f:
+    file = f.readlines()
+    
+    container = []
+
+    for line in file:
+        container.append(line.replace("\n", ""))
+    
+    print(container)
+
 if __name__ == "__main__":
     main()
+        
+
+    
+
+    
+
