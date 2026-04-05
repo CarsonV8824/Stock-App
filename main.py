@@ -1,34 +1,20 @@
-from ttkthemes import ThemedTk
-from tkinter import ttk
-import tkinter as tk
+import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 
-def rgb(r, g, b):
-    return f'#{r:02x}{g:02x}{b:02x}'
+from gui.mainWindow import MainWindow
 
 def main():
-    root = ThemedTk(theme="breeze")
-    root.config(bg=rgb(200,200,200))
-    button = ttk.Button(root, text="modern button")
-    entry = ttk.Entry(root)
-    entry.pack()
-    button.pack()
-    root.mainloop()
+    # 1. Create the application instance
+    app = QApplication(sys.argv)
 
-with open("quiz.txt", "r") as f:
-    file = f.readlines()
-    
-    container = []
+    window = MainWindow()
 
-    for line in file:
-        container.append(line.replace("\n", ""))
+    # 4. Show the window
+    window.show()
+
+    # 5. Start the event loop
+    app.exec()
     
-    print(container)
 
 if __name__ == "__main__":
     main()
-        
-
-    
-
-    
-
