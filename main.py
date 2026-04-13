@@ -1,20 +1,22 @@
-import sys
+import sys, os
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 
 from gui.mainWindow import MainWindow
 
+file_path = os.path.join(os.path.dirname(__file__), "assets", "styles.css")
+with open(file_path, "r") as f:
+    file_path = f.read()
+
 def main():
-    # 1. Create the application instance
+   
     app = QApplication(sys.argv)
+    app.setStyleSheet(file_path)
 
     window = MainWindow()
 
-    # 4. Show the window
     window.show()
 
-    # 5. Start the event loop
-    app.exec()
+    sys.exit(app.exec())    
     
-
 if __name__ == "__main__":
     main()

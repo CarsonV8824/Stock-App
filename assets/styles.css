@@ -1,0 +1,15 @@
+QMainWindow {
+    background-color: rgb(240, 240, 240);
+}
+
+QPushButton {
+    background-color: rgb(52, 103, 232);
+    border: 0px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: white;
+    padding: 8px;
+}
