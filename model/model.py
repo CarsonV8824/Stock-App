@@ -71,6 +71,7 @@ class Model:
                     low = float(line[3])
                     close = float(line[4])
                     volume = int(line[5])
+                    print(date, Open, high, low, close, volume)
                     yield date, Open, high, low, close, volume
                 else:
                     continue
