@@ -2,8 +2,10 @@ import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 apple = yf.Ticker("AAPL")
+
 
 hist = apple.history(start="2020-01-01", end="2026-04-01")
 #print(hist)

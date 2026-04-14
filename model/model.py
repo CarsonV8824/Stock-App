@@ -1,4 +1,5 @@
-from sklearn.neural_network import MLPClassifier, MLPRegressor
+from pyparsing import line
+from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import numpy as np
@@ -6,18 +7,24 @@ import pandas as pd
 import joblib
 import csv
 import os
+from typing import Generator 
 
 class Model:
     def __init__(self):
-        self.model = MLPClassifier(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
+        self.model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=2000, random_state=42)
         self.scaler = StandardScaler()
 
     def train(self, X_train, y_train):
         X_train_scaled = self.scaler.fit_transform(X_train)
         self.model.fit(X_train_scaled, y_train)
 
-    def predict(self, X_test):
-        X_test = np.array(X_test, dtype=np.float32)
+    def predict(self, X_test: list) -> np.ndarray:
+        if type(X_test) == list:
+            X_test = np.array(X_test, dtype=np.float32)
+        elif type(X_test) == np.ndarray:
+            pass
+        else:
+            raise ValueError("X_test must be a list or numpy array")
         X_test_scaled = self.scaler.transform(X_test)
         return self.model.predict(X_test_scaled)
 
@@ -32,7 +39,7 @@ class Model:
         return self.model.score(X_test_scaled, y_test)
 
     @staticmethod
-    def convert_date_to_posix(date_str):
+    def convert_date_to_posix(date_str:str) -> int:
         temp_df = pd.DataFrame([date_str], columns=["date"])
         temp_df["date"] = pd.to_datetime(
             temp_df["date"],
@@ -41,10 +48,20 @@ class Model:
         )
         temp_df["date"] = temp_df["date"].astype("int64") // 10**9
         return int(temp_df["date"].iloc[0])
+    
+    @staticmethod
+    def convert_all_times_in_history_to_posix(data_frame: pd.DataFrame) -> pd.DataFrame:
+        data_frame["date"] = pd.to_datetime(
+            data_frame["date"],
+            utc=True,
+            format="%Y-%m-%d %H:%M:%S%z"
+        )
+        data_frame["date"] = data_frame["date"].astype("int64") // 10**9
+        return data_frame
 
     @staticmethod
-    def get_data_for_model():
-        """2020-02-10 00:00:00-05:00"""
+    def get_data_for_model() ->  Generator[tuple[int, float, float, float, float, int], None, None]:
+        """Generator that yields date, Open, high, low, close, volume from the data.csv file. Extra columns are ignored and return None. The date is converted to POSIX seconds and returned as an integer. Open, high, low, close are returned as floats and volume is returned as an integer."""
         file_path_data = os.path.join(os.path.dirname(__file__), "..", "data", "data.csv")
         with open(file_path_data, "r") as f:
             for index, line in enumerate(csv.reader(f)):
@@ -78,9 +95,9 @@ class Model:
 
 model = Model()
 lines = list(model.get_data_for_model())
-X = np.array([[line[0], line[1], line[2], line[3], line[4], line[5]] for line in lines], dtype=np.float32)
-y = np.array([1 if line[4] > line[1] else 0 for line in lines]) 
+X = np.array([[line[0]] for line in lines], dtype=np.float32)
+y = np.array([[line[1], line[2], line[3], line[4]] for line in lines], dtype=np.float32)
 model.train(X, y)
 print(model.predict(X))
 print(model.test_model(X, y))
-print(model.predict([[model.convert_date_to_posix("2020-02-10 00:00:00-05:00"),56.645632456, 76.54835795686193,73.46170617265714,74.53742980957031,200622400]]))
+print(model.predict([[model.convert_date_to_posix("2026-02-27 00:00:00-05:00")]]))
