@@ -6,9 +6,9 @@ import seaborn as sns
 apple = yf.Ticker("AAPL")
 
 hist = apple.history(start="2020-01-01", end="2026-04-01")
-print(hist)
+#print(hist)
 #hist.to_csv("data/apple_stock_data.csv")
-print(apple.info["regularMarketPrice"])
+#print(apple.info["regularMarketPrice"])
 
 sns.set_style("whitegrid")
 sns.lineplot(data=hist, x=hist.index, y="Close")
