@@ -1,17 +1,16 @@
-from pyparsing import line
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 import joblib
 import csv
 import os
 from typing import Generator 
+import yfinance as yf
 
 class Model:
     def __init__(self):
-        self.model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=2000, random_state=42)
+        self.model = MLPRegressor(hidden_layer_sizes=(256, 128, 64, 32), max_iter=2000, random_state=42)
         self.scaler = StandardScaler()
 
     def train(self, X_train, y_train):
@@ -61,8 +60,8 @@ class Model:
 
     @staticmethod
     def get_data_for_model() ->  Generator[tuple[int, float, float, float, float, int], None, None]:
-        """Generator that yields date, Open, high, low, close, volume from the data.csv file. Extra columns are ignored and return None. The date is converted to POSIX seconds and returned as an integer. Open, high, low, close are returned as floats and volume is returned as an integer."""
-        file_path_data = os.path.join(os.path.dirname(__file__), "..", "data", "data.csv")
+        """Generator that yields date, Open, high, low, close, volume from the msft_stock_data.csv file. Extra columns are ignored and return None. The date is converted to POSIX seconds and returned as an integer. Open, high, low, close are returned as floats and volume is returned as an integer."""
+        file_path_data = os.path.join(os.path.dirname(__file__), "..", "data", "msft_stock_data.csv")
         with open(file_path_data, "r") as f:
             for index, line in enumerate(csv.reader(f)):
                 if index != 0:
@@ -93,11 +92,24 @@ class Model:
                 else:
                     continue
 
-model = Model()
-lines = list(model.get_data_for_model())
-X = np.array([[line[0]] for line in lines], dtype=np.float32)
-y = np.array([[line[1], line[2], line[3], line[4]] for line in lines], dtype=np.float32)
-model.train(X, y)
-print(model.predict(X))
-print(model.test_model(X, y))
-print(model.predict([[model.convert_date_to_posix("2026-02-27 00:00:00-05:00")]]))
+def main():
+    apple = yf.Ticker("MSFT")
+
+
+    hist = apple.history(start="2020-01-01", end="2026-04-01")
+    print(hist)
+    hist.to_csv("data/msft_stock_data.csv")
+    print(apple.info["regularMarketPrice"])
+
+    model = Model()
+    lines = list(model.get_data_for_model())
+    X = np.array([[line[0]] for line in lines], dtype=np.float32)
+    y = np.array([[line[1], line[2], line[3], line[4]] for line in lines], dtype=np.float32)
+    model.train(X, y)
+    print(model.predict(X))
+    print(model.test_model(X, y))
+    for i in range(1, 32):
+        print(model.predict([[model.convert_date_to_posix(f"2026-03-{i:02d} 00:00:00-05:00")]]))
+    
+if __name__ == "__main__":
+    main()
