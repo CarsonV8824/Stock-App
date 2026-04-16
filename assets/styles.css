@@ -25,7 +25,3 @@ QPushButton:hover {
     color: white;
     padding: 8px;
 }
-
-QLabel {
-    color: black;
-}
