@@ -95,7 +95,6 @@ class Model:
 def main():
     apple = yf.Ticker("MSFT")
 
-
     hist = apple.history(start="2020-01-01", end="2026-04-01")
     print(hist)
     hist.to_csv("data/msft_stock_data.csv")

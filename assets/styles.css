@@ -13,3 +13,19 @@ QPushButton {
     color: white;
     padding: 8px;
 }
+
+QPushButton:hover {
+    background-color: rgb(73, 116, 224);
+    border: 0px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: white;
+    padding: 8px;
+}
+
+QLabel {
+    color: black;
+}
