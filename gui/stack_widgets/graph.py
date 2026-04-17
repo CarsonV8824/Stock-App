@@ -59,12 +59,12 @@ class Graph(QWidget):
     def get_graph(self):
         new_data:pd.DataFrame | None = getStockData(self.stock_name.text())
         if type(new_data) == None:
+            print(new_data)
             QMessageBox.warning(
                 self, 
                 "Error",
                 "Error Getting Stock data. Check inputs"
             )
-            return
         self.ax.clear()
         df = new_data.reset_index()
         sns.lineplot(data=df, x="Date", y="Close", ax=self.ax).set_title(f"Stock of {self.stock_name.text()}")
