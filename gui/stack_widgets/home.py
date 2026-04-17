@@ -11,7 +11,7 @@ class Home(QWidget):
         self.setLayout(layout)
 
         text = QLabel(self.get_html())
-        text.setAlignment(Qt.AlignCenter)
+        text.setAlignment(Qt.AlignCenter & Qt.AlignTop)
 
         layout.addWidget(text)
 
